@@ -34,22 +34,16 @@ Route::post('/update-roles', [HomeController::class, 'updateRoles'])
     ->name('roles.update')
     ->middleware('auth');
 // Role-Specific Dashboards
-Route::middleware(['auth', 'role:patient'])->group(function () {
-    Route::get(
-        '/patient/dashboard',
-        [PatientController::class, 'dashboard']
-    )->name('patient.dashboard');
+Route::middleware(['auth', 'checkroles:patient'])->group(function () {
+    Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
 });
 
-Route::middleware(['auth', 'role:doctor'])->group(function () {
-    Route::get('/doctor/dashboard', [DoctorController::class, 'index'])->middleware('checkroles:doctor');
+Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
+    Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get(
-        '/admin/dashboard',
-        [AdminController::class, 'dashboard']
-    )->name('admin.dashboard');
+Route::middleware(['auth', 'checkroles:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
 
 // Home Routes

@@ -55,10 +55,77 @@
         .profile-details p {
             margin-bottom: 10px;
         }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #2575fc;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ddd;
+        }
+
+        .nav-item .dropdown-menu {
+            background-color: #2575fc;
+            border: none;
+        }
+
+        .nav-item .dropdown-menu a {
+            color: #fff;
+        }
+
+        .nav-item .dropdown-menu a:hover {
+            background-color: #1a5bbf;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Static Doctor Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Telemedicine</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{Auth::user()->name}}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         @yield('content')
     </div>
@@ -68,3 +135,4 @@
 </body>
 
 </html>
+

@@ -37,16 +37,19 @@ class LoginController extends Controller
     {
         $user = Auth::user();
 
-        switch ($user->role) {
-            case 'patient':
-                return redirect()->route('patient.dashboard');
-            case 'doctor':
-                return redirect()->route('doctor.dashboard');
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            default:
-                return redirect('/');
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You must be logged in.');
         }
+
+        $roleRoutes = [
+            'patient' => 'patient.dashboard',
+            'doctor'  => 'doctor.dashboard',
+            'admin'   => 'admin.dashboard',
+        ];
+
+        return isset($roleRoutes[$user->role])
+            ? redirect()->route($roleRoutes[$user->role])
+            : redirect('/')->with('error', 'Invalid role.');
     }
 
     protected function authenticated(Request $request, $user)
