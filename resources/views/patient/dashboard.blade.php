@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app-pat')
 
 @section('title', 'Patient Dashboard')
 

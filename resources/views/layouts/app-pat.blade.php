@@ -101,10 +101,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Dashboard</a>
+                        <a class="nav-link active" href="{{route('patient.dashboard')}}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Appointments</a>
+                        <a class="nav-link" href="{{route('patient.doctors')}}">Appointments</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Patients</a>
@@ -119,7 +119,7 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Edit Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li><a class="dropdown-item" href="{{route('patient.logout')}}">Logout</a></li>
                             </ul>
                         </li>
                     @else

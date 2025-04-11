@@ -10,4 +10,7 @@ class PatientController extends Controller
     {
         return view('patient.dashboard');
     }
+    public function doctorspage(){
+        return view('patient.doctors');
+    }
 }
