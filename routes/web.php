@@ -40,6 +40,7 @@ Route::middleware(['auth', 'checkroles:patient'])->group(function () {
 
 Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
+    Route::get('/doctor/appointments',[DoctorController::class,'appointmentspage'])->name('doctor.appointments');
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {

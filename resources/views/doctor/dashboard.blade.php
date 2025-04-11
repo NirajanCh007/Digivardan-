@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app-doc')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Doctor - Dashboard')
 
 @section('content')
 <div class="container py-5">
