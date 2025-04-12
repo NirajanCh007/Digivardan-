@@ -44,6 +44,8 @@ Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
     Route::get('/doctor/appointments',[DoctorController::class,'appointmentspage'])->name('doctor.appointments');
     Route::get('/doctor/logout',[LoginController::class,'logout'])->name('doctor.logout');
+    Route::get('/doctor/addappointmentpage',[DoctorController::class,'addApt'])->name('doctor.addApt');
+    Route::post('/doctor/storeapt',[DoctorController::class,'store'])->name('doctor.storeapt');
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {

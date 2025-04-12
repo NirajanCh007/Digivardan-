@@ -107,7 +107,7 @@
                         <a class="nav-link" href="{{route('doctor.appointments')}}">Appointments</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Patients</a>
+                        <a class="nav-link" href="#">Consultancy History</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Profile</a>
