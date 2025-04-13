@@ -53,6 +53,9 @@
     <div class="text-end mt-4">
         <a href="{{route('doctor.addApt')}}" class="btn btn-success">➕ Add New Appointment</a>
     </div>
+    <div class="text-end mt-4">
+        <a href="{{route('doctor.addfreetime')}}" class="btn btn-success">➕ Post Free Time</a>
+    </div>
 </div>
 
 

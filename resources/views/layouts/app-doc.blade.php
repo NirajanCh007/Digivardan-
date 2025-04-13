@@ -110,7 +110,7 @@
                         <a class="nav-link" href="#">Consultancy History</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="{{route('doctor.profile')}}">Profile</a>
                     </li>
                     @if (Auth::user())
                         <li class="nav-item dropdown">

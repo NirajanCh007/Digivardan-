@@ -21,10 +21,6 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-// Logout Route
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
 
 // Authentication Routes
 Auth::routes();
@@ -46,6 +42,10 @@ Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
     Route::get('/doctor/logout',[LoginController::class,'logout'])->name('doctor.logout');
     Route::get('/doctor/addappointmentpage',[DoctorController::class,'addApt'])->name('doctor.addApt');
     Route::post('/doctor/storeapt',[DoctorController::class,'store'])->name('doctor.storeapt');
+    Route::get('/doctor/addfreetime',[DoctorController::class,'postfreetime'])->name('doctor.addfreetime');
+    Route::post('/doctor/postfreetime',[DoctorController::class,'storefreetime'])->name('doctor.storefreetime');
+    Route::get('/doctor/profile',[DoctorController::class,'profilepage'])->name('doctor.profile');
+    Route::post('/doctor/profileinfo',[DoctorController::class,'storeDoctorInfo'])->name('doctor.storeinfo');
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {
