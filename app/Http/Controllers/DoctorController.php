@@ -103,5 +103,68 @@ class DoctorController extends Controller
         $appointment->save();
         return redirect()->route('doctor.appointments')->with('success', 'Appointment added successfully');
     }
+    public function updateDoctorInfo(Request $request){
+        $rules = [
+            'specialization' => 'required|string|max:255',
+            'experience' => 'required|integer|min:0',
+            'qualification' => 'required|string|max:255',
+            'clinic_name' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            \Log::error('Update validation failed:', $validator->errors()->toArray());
+            return redirect()->route('doctor.profile')->withInput()->withErrors($validator);
+        }
+
+        try {
+            $doctor = Doctors::where('user_id', Auth::user()->id)->first();
+
+            if (!$doctor) {
+                \Log::error('Doctor profile not found for update:', ['user_id' => Auth::user()->id]);
+                return redirect()->route('doctor.profile')->with('error', 'Profile not found. Please create a profile first.');
+            }
+
+            // Update basic info
+            $doctor->specialization = $request->specialization;
+            $doctor->experience = $request->experience;
+            $doctor->qualification = $request->qualification;
+            $doctor->clinic_name = $request->clinic_name;
+            $doctor->location = $request->location;
+            $doctor->bio = $request->bio;
+            $doctor->phone = $request->phone;
+
+            if ($request->hasFile('profile_image')) {
+                $image = $request->file('profile_image');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+                // Create directory if it doesn't exist
+                $path = public_path('uploads/doctors');
+                if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+
+                // Delete old image if exists
+                if ($doctor->profile_image && file_exists($path . '/' . $doctor->profile_image)) {
+                    unlink($path . '/' . $doctor->profile_image);
+                }
+
+                // Move and save new image
+                $image->move($path, $imageName);
+                $doctor->profile_image = $imageName;
+            }
+
+            $doctor->save();
+            \Log::info('Doctor profile updated:', ['doctor_id' => $doctor->id]);
+            return redirect()->route('doctor.profile')->with('success', 'Profile has been updated successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Error updating doctor profile:', ['error' => $e->getMessage()]);
+            return redirect()->route('doctor.profile')->with('error', 'An error occurred while updating your profile.');
+        }
+    }
 
 }

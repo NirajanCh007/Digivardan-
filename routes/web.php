@@ -44,8 +44,9 @@ Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
     Route::post('/doctor/storeapt',[DoctorController::class,'store'])->name('doctor.storeapt');
     Route::get('/doctor/addfreetime',[DoctorController::class,'postfreetime'])->name('doctor.addfreetime');
     Route::post('/doctor/postfreetime',[DoctorController::class,'storefreetime'])->name('doctor.storefreetime');
-    Route::get('/doctor/profile',[DoctorController::class,'profilepage'])->name('doctor.profile');
-    Route::post('/doctor/profileinfo',[DoctorController::class,'storeDoctorInfo'])->name('doctor.storeinfo');
+    Route::get('/doctor/profile', [DoctorController::class, 'profilepage'])->name('doctor.profile');
+    Route::post('/doctor/profileinfo', [DoctorController::class, 'storeDoctorInfo'])->name('doctor.storeinfo');
+    Route::put('/doctor/profileinfo', [DoctorController::class, 'updateDoctorInfo'])->name('doctor.updateinfo');
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {
