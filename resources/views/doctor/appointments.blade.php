@@ -3,7 +3,7 @@
 @section('title', 'My Appointments')
 
 @section('content')
-<div class="container py-5">
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary fw-bold">📋 My Appointments</h2>
         <div>
@@ -59,5 +59,5 @@
             @endforeach
         </div>
     @endif
-</div>
+
 @endsection

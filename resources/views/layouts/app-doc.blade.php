@@ -7,7 +7,8 @@
     <title>@yield('title', 'Telemedicine Platform')</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -122,14 +123,31 @@
                                 <li><a class="dropdown-item" href="{{route('doctor.logout')}}">Logout</a></li>
                             </ul>
                         </li>
-                    @else
-                        <li class="nav-item ms-lg-3">
-                            <a href="{{ route('login') }}" class="btn btn-outline-light">Login</a>
+                        <li class="nav-item dropdown ">
+                            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell fs-5"></i>
+                                @if(Auth::user()->unreadNotifications->count() > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ Auth::user()->unreadNotifications->count() }}
+                                    </span>
+                                @endif
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-2" style="min-width: 300px;">
+                                @forelse(Auth::user()->unreadNotifications->take(5) as $notification)
+                                    <li class="mb-2">
+                                        <div class="small text-muted">{{ $notification->created_at->diffForHumans() }}</div>
+                                        <div>{{ $notification->data['message'] ?? 'New notification' }}</div>
+                                    </li>
+                                @empty
+                                    <li class="text-muted text-center">No new notifications</li>
+                                @endforelse
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center"><a href="{{route('doctor.notifications')}}" class="dropdown-item">View All</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item ms-lg-2">
-                            <a href="{{ route('register') }}" class="btn btn-accent">Register</a>
-                        </li>
+
                     @endif
+
                 </ul>
             </div>
         </div>
@@ -150,9 +168,10 @@
         @endif
 
 	</div>
-    <div class="container">
+    <div class="container min-vh-100 d-flex flex-column pt-4">
         @yield('content')
     </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

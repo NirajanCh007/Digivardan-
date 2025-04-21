@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor_availabilities;
+use App\Notifications\AppointmentBooked;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointments;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 class PatientController extends Controller
 {
     public function dashboard()
@@ -20,29 +22,50 @@ class PatientController extends Controller
         $available = Doctor_availabilities::where('is_booked','False')->orderBy('created_at','ASC')->get();
         return view('patient.appointments',with(['availabilities'=>$available]));
     }
-    public function bookAppointment(Request $request){
-        $validator =Validator::make($request->all(),[
-            'availability_id'=>'required',
-            'doctor_id'=>'required',
-            'patient_id'=>'required',
-            'date'=>'required',
-            'time'=>'required'
+    public function bookAppointment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'availability_id' => 'required|exists:doctor_availabilities,id',
+            'doctor_id' => 'required|exists:users,id',
+            'date' => 'required|date',
+            'time' => 'required'
         ]);
-        if($validator->passes()){
+        if ($validator->passes()) {
             $booking = new Appointments();
-            $booking->patient_id = Auth::user()->id;
-            $booking->doctor_id = $request->doctor_id ;
+            $booking->patient_id = Auth::id();
+            $booking->doctor_id = $request->doctor_id;
             $booking->appointment_date = $request->date;
             $booking->appointment_time = $request->time;
             $booking->save();
-            $av = new Doctor_availabilities();
-            $av->is_booked = "True" ;
-            $av->save();
-            return redirect()->route('patient.checkappointments')->with('success','You have booked');
-        }else {
-            return redirect()->route('patient.checkappointments')->withErrors($validator);
+            $availability = Doctor_availabilities::find($request->availability_id);
+            if ($availability) {
+                $availability->is_booked = true;
+                $availability->save();
+            }
+            $doctor = User::find($request->doctor_id);
+            $doctor->notify(new AppointmentBooked($booking));
+            Auth::user()->notify(new AppointmentBooked($booking));
+            return redirect()->route('patient.checkappointments')->with('success', 'Appointment booked successfully!');
+        } else {
+            return redirect()->route('patient.checkappointments')->withErrors($validator)->withInput();
         }
     }
+    public function notifications() {
+        $notifications = auth()->user()->notifications;
+        return view('patient.notifications', compact('notifications'));
+    }
+    public function markNotification($id)
+    {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return redirect()->back()->with('success', 'Notification marked as read.');
+    }
+    public function markAllNotifications()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return back()->with('success', 'All notifications marked as read.');
+    }
+
     public function profile()
     {
         $user = Auth::user();

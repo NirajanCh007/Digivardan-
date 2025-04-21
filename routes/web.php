@@ -37,6 +37,10 @@ Route::middleware(['auth', 'checkroles:patient'])->group(function () {
     Route::get('/patient/profile',[PatientController::class,'profile'])->name('patient.profile');
     Route::get('/patient/logout',[LoginController::class,'logout'])->name('patient.logout');
     Route::post('/patient/book',[PatientController::class,'bookAppointment'])->name('patient.book');
+    Route::get('/notifications', [PatientController::class, 'notifications'])->name('patient.notifications');
+    Route::put('/notifications/{id}/mark-read', [PatientController::class, 'markNotification'])->name('patient.markNotification');
+    Route::put('/notifications/mark-all', [PatientController::class, 'markAllNotifications'])->name('patient.markAllNotifications');
+
 });
 
 Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
@@ -50,6 +54,10 @@ Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
     Route::get('/doctor/profile', [DoctorController::class, 'profilepage'])->name('doctor.profile');
     Route::post('/doctor/profileinfo', [DoctorController::class, 'storeDoctorInfo'])->name('doctor.storeinfo');
     Route::put('/doctor/profileinfo', [DoctorController::class, 'updateDoctorInfo'])->name('doctor.updateinfo');
+    Route::get('/notifications', [PatientController::class, 'notifications'])->name('doctor.notifications');
+    Route::put('/notifications/{id}/mark-read', [DoctorController::class, 'markNotification'])->name('doctor.markNotification');
+    Route::put('/notifications/mark-all', [DoctorController::class, 'markAllNotifications'])->name('doctor.markAllNotifications');
+
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {

@@ -117,7 +117,6 @@ class DoctorController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
-            \Log::error('Update validation failed:', $validator->errors()->toArray());
             return redirect()->route('doctor.profile')->withInput()->withErrors($validator);
         }
 
@@ -125,11 +124,8 @@ class DoctorController extends Controller
             $doctor = Doctors::where('user_id', Auth::user()->id)->first();
 
             if (!$doctor) {
-                \Log::error('Doctor profile not found for update:', ['user_id' => Auth::user()->id]);
                 return redirect()->route('doctor.profile')->with('error', 'Profile not found. Please create a profile first.');
             }
-
-            // Update basic info
             $doctor->specialization = $request->specialization;
             $doctor->experience = $request->experience;
             $doctor->qualification = $request->qualification;
@@ -137,34 +133,40 @@ class DoctorController extends Controller
             $doctor->location = $request->location;
             $doctor->bio = $request->bio;
             $doctor->phone = $request->phone;
-
             if ($request->hasFile('profile_image')) {
                 $image = $request->file('profile_image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                // Create directory if it doesn't exist
                 $path = public_path('uploads/doctors');
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-
-                // Delete old image if exists
                 if ($doctor->profile_image && file_exists($path . '/' . $doctor->profile_image)) {
                     unlink($path . '/' . $doctor->profile_image);
                 }
-
-                // Move and save new image
                 $image->move($path, $imageName);
                 $doctor->profile_image = $imageName;
             }
 
             $doctor->save();
-            \Log::info('Doctor profile updated:', ['doctor_id' => $doctor->id]);
             return redirect()->route('doctor.profile')->with('success', 'Profile has been updated successfully.');
         } catch (\Exception $e) {
-            \Log::error('Error updating doctor profile:', ['error' => $e->getMessage()]);
             return redirect()->route('doctor.profile')->with('error', 'An error occurred while updating your profile.');
         }
+    }
+    public function notifications() {
+        $notifications = auth()->user()->notifications;
+        return view('doctor.notifications', compact('notifications'));
+    }
+    public function markNotification($id)
+    {
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+        return redirect()->back()->with('success', 'Notification marked as read.');
+    }
+    public function markAllNotifications()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return back()->with('success', 'All notifications marked as read.');
     }
 
 }
