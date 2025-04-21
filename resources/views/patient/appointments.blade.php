@@ -16,9 +16,12 @@
                         <p class="card-text mb-1"><strong>Available On:</strong> {{ \Carbon\Carbon::parse($slot->available_date)->format('F j, Y') }}</p>
                         <p class="card-text mb-3"><strong>Time:</strong> {{ \Carbon\Carbon::parse($slot->available_time)->format('g:i A') }}</p>
 
-                        <form action="{{ route('appointments.book') }}" method="POST">
+                        <form action="{{route('patient.book')}}" method="POST">
                             @csrf
                             <input type="hidden" name="availability_id" value="{{ $slot->id }}">
+                            <input type="hidden" name="doctor_id" value="{{ $slot->doctor->id }}">
+                            <input type="hidden" name="date" value="{{ $slot->available_date }}">
+                            <input type="hidden" name="time" value="{{ $slot->available_time}}">
                             <button class="btn btn-success w-100">Book Appointment</button>
                         </form>
                     </div>

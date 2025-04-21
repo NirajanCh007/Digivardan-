@@ -33,7 +33,10 @@ Route::post('/update-roles', [HomeController::class, 'updateRoles'])
 Route::middleware(['auth', 'checkroles:patient'])->group(function () {
     Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
     Route::get('/patient/doctors',[PatientController::class,'doctorspage'])->name('patient.doctors');
+    Route::get('/patient/appointments',[PatientController::class,'appointmentspage'])->name('patient.checkappointments');
+    Route::get('/patient/profile',[PatientController::class,'profile'])->name('patient.profile');
     Route::get('/patient/logout',[LoginController::class,'logout'])->name('patient.logout');
+    Route::post('/patient/book',[PatientController::class,'bookAppointment'])->name('patient.book');
 });
 
 Route::middleware(['auth', 'checkroles:doctor'])->group(function () {

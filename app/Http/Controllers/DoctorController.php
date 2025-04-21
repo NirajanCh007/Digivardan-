@@ -79,7 +79,7 @@ class DoctorController extends Controller
             $freetime->doctor_id = Auth::user()->id;
             $freetime->available_date = $request->available_date;
             $freetime->available_time = $request->available_time;
-            $freetime->is_booked = false;
+            $freetime->is_booked = "False";
             $freetime->save();
             return redirect()->route('doctor.addfreetime')->with('success','Now patients can see your free time');
         }else{

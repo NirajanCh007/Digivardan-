@@ -104,13 +104,11 @@
                         <a class="nav-link active" href="{{route('patient.dashboard')}}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('patient.doctors')}}">Appointments</a>
+                        <a class="nav-link" href="{{route('patient.checkappointments')}}">Appointments</a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Patients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="{{route('patient.profile')}}">Profile</a>
                     </li>
                     @if (Auth::user())
                         <li class="nav-item dropdown">
@@ -134,7 +132,22 @@
             </div>
         </div>
     </nav>
+	<div>
+		@if (Session::has('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success:</strong> {{ Session::get('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
+        @if (Session::has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> {{ Session::get('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+	</div>
     <div class="container">
         @yield('content')
     </div>
