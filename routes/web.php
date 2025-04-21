@@ -30,34 +30,38 @@ Route::post('/update-roles', [HomeController::class, 'updateRoles'])
     ->name('roles.update')
     ->middleware('auth');
 // Role-Specific Dashboards
-Route::middleware(['auth', 'checkroles:patient'])->group(function () {
-    Route::get('/patient/dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
-    Route::get('/patient/doctors',[PatientController::class,'doctorspage'])->name('patient.doctors');
-    Route::get('/patient/appointments',[PatientController::class,'appointmentspage'])->name('patient.checkappointments');
-    Route::get('/patient/profile',[PatientController::class,'profile'])->name('patient.profile');
-    Route::get('/patient/logout',[LoginController::class,'logout'])->name('patient.logout');
-    Route::post('/patient/book',[PatientController::class,'bookAppointment'])->name('patient.book');
-    Route::get('/notifications', [PatientController::class, 'notifications'])->name('patient.notifications');
-    Route::put('/notifications/{id}/mark-read', [PatientController::class, 'markNotification'])->name('patient.markNotification');
-    Route::put('/notifications/mark-all', [PatientController::class, 'markAllNotifications'])->name('patient.markAllNotifications');
+Route::group(['prefix'=>'patient'],function(){
+    Route::middleware(['auth', 'checkroles:patient'])->group(function () {
+        Route::get('dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
+        Route::get('doctors',[PatientController::class,'doctorspage'])->name('patient.doctors');
+        Route::get('appointments',[PatientController::class,'appointmentspage'])->name('patient.checkappointments');
+        Route::get('profile',[PatientController::class,'profile'])->name('patient.profile');
+        Route::get('logout',[LoginController::class,'logout'])->name('patient.logout');
+        Route::post('book',[PatientController::class,'bookAppointment'])->name('patient.book');
+        Route::get('notifications', [PatientController::class, 'notifications'])->name('patient.notifications');
+        Route::put('notifications/{id}/mark-read', [PatientController::class, 'markNotification'])->name('patient.markNotification');
+        Route::put('notifications/mark-all', [PatientController::class, 'markAllNotifications'])->name('patient.markAllNotifications');
 
+    });
 });
 
-Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
-    Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
-    Route::get('/doctor/appointments',[DoctorController::class,'appointmentspage'])->name('doctor.appointments');
-    Route::get('/doctor/logout',[LoginController::class,'logout'])->name('doctor.logout');
-    Route::get('/doctor/addappointmentpage',[DoctorController::class,'addApt'])->name('doctor.addApt');
-    Route::post('/doctor/storeapt',[DoctorController::class,'store'])->name('doctor.storeapt');
-    Route::get('/doctor/addfreetime',[DoctorController::class,'postfreetime'])->name('doctor.addfreetime');
-    Route::post('/doctor/postfreetime',[DoctorController::class,'storefreetime'])->name('doctor.storefreetime');
-    Route::get('/doctor/profile', [DoctorController::class, 'profilepage'])->name('doctor.profile');
-    Route::post('/doctor/profileinfo', [DoctorController::class, 'storeDoctorInfo'])->name('doctor.storeinfo');
-    Route::put('/doctor/profileinfo', [DoctorController::class, 'updateDoctorInfo'])->name('doctor.updateinfo');
-    Route::get('/notifications', [PatientController::class, 'notifications'])->name('doctor.notifications');
-    Route::put('/notifications/{id}/mark-read', [DoctorController::class, 'markNotification'])->name('doctor.markNotification');
-    Route::put('/notifications/mark-all', [DoctorController::class, 'markAllNotifications'])->name('doctor.markAllNotifications');
+Route::group(['prefix'=>'doctor'],function(){
+    Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
+        Route::get('dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
+        Route::get('appointments',[DoctorController::class,'appointmentspage'])->name('doctor.appointments');
+        Route::get('logout',[LoginController::class,'logout'])->name('doctor.logout');
+        Route::get('addappointmentpage',[DoctorController::class,'addApt'])->name('doctor.addApt');
+        Route::post('storeapt',[DoctorController::class,'store'])->name('doctor.storeapt');
+        Route::get('addfreetime',[DoctorController::class,'postfreetime'])->name('doctor.addfreetime');
+        Route::post('postfreetime',[DoctorController::class,'storefreetime'])->name('doctor.storefreetime');
+        Route::get('profile', [DoctorController::class, 'profilepage'])->name('doctor.profile');
+        Route::post('profileinfo', [DoctorController::class, 'storeDoctorInfo'])->name('doctor.storeinfo');
+        Route::put('profileinfo', [DoctorController::class, 'updateDoctorInfo'])->name('doctor.updateinfo');
+        Route::get('notifications', [DoctorController::class, 'notifications'])->name('doctor.notifications');
+        Route::put('notifications/{id}/mark-read', [DoctorController::class, 'markNotification'])->name('doctor.markNotification');
+        Route::put('notifications/mark-all', [DoctorController::class, 'markAllNotifications'])->name('doctor.markAllNotifications');
 
+    });
 });
 
 Route::middleware(['auth', 'checkroles:admin'])->group(function () {
