@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Doctor_availabilities;
+use App\Models\Prescription;
 use App\Notifications\AppointmentBooked;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,14 +14,13 @@ class PatientController extends Controller
 {
     public function dashboard()
     {
-        return view('patient.dashboard');
-    }
-    public function doctorspage(){
-        return view('patient.doctors');
+        $Appointments = Appointments::where('patient_id',Auth::id())->orderBy('created_at','ASC')->take(3)->get();
+
+        return view('patient.dashboard',['appointments'=>$Appointments]);
     }
     public function appointmentspage(){
-        $available = Doctor_availabilities::where('is_booked','False')->orderBy('created_at','ASC')->get();
-        return view('patient.appointments',with(['availabilities'=>$available]));
+        $available = Doctor_availabilities::with('doctor')->where('is_booked','False')->orderBy('created_at','ASC')->get();
+        return view('patient.appointments',with(['slot'=>$available]));
     }
     public function bookAppointment(Request $request)
     {
@@ -36,6 +36,7 @@ class PatientController extends Controller
             $booking->doctor_id = $request->doctor_id;
             $booking->appointment_date = $request->date;
             $booking->appointment_time = $request->time;
+            $booking->notes = $request->notes;
             $booking->save();
             $availability = Doctor_availabilities::find($request->availability_id);
             if ($availability) {
@@ -66,6 +67,10 @@ class PatientController extends Controller
         return back()->with('success', 'All notifications marked as read.');
     }
 
+    public function showPrescription($id){
+        $prescription = Prescription::with(['appointment','doctor','patient'])->findOrFail($id);
+        return view('patient.prescription',compact('prescription'));
+    }
     public function profile()
     {
         $user = Auth::user();

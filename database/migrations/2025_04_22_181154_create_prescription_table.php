@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('prescription', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
+            $table->unsignedBigInteger('appointment_id');
             $table->unsignedBigInteger('doctor_id');
-            $table->date('appointment_date');
-            $table->time('appointment_time');
-            $table->enum('status', ['pending', 'confirmed', 'completed'])->default('pending');
+            $table->unsignedBigInteger('patient_id');
+            $table->text('diagnosis')->nullable();
+            $table->text('medicines')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
-            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
             $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade');
         });
-
     }
 
     /**
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('prescription');
     }
 };

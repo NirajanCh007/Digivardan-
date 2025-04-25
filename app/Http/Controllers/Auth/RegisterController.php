@@ -37,8 +37,6 @@ class RegisterController extends Controller
             'role' => $request->role,
         ]);
 
-        // Automatically log in the user after registration (Optional)
-        Auth::login($user);
 
         return redirect('/login')->with('success', 'Registration successful! Please log in.');
     }

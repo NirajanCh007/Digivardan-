@@ -18,72 +18,62 @@
     <!-- Grid Layout -->
     <div class="row g-4">
 
-      <!-- Upcoming Appointments -->
-      <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-          <div class="card-body">
-            <h4 class="card-title mb-4">📅 Upcoming Appointments</h4>
+        <!-- Upcoming Appointments -->
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h4 class="card-title mb-4">📅 Upcoming Appointments</h4>
 
-            <div class="border rounded p-3 mb-3">
-              <p><strong>Patient:</strong> John Doe</p>
-              <p><strong>Date:</strong> 2025-04-07</p>
-              <p><strong>Status:</strong> <span class="text-success fw-semibold">Confirmed</span></p>
-              <a href="#" class="btn btn-link p-0">View Details</a>
+              @forelse ($appointments as $appointment)
+                @if(in_array($appointment->status, ['pending', 'confirmed']))
+                  <div class="border rounded p-3 mb-3">
+                    <p><strong>Patient:</strong> {{ $appointment->patient->name ?? 'Unknown' }}</p>
+                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y') }}</p>
+                    <p><strong>Status:</strong>
+                      @if($appointment->status == 'pending')
+                        <span class="text-warning fw-semibold">Pending</span>
+                      @else
+                        <span class="text-success fw-semibold">Confirmed</span>
+                      @endif
+                    </p>
+                    <a href="{{ route('doctor.viewAppointment', $appointment->id) }}" class="btn btn-link p-0">View Details</a>
+                  </div>
+                @endif
+              @empty
+                <div class="alert alert-info">No upcoming appointments.</div>
+              @endforelse
+
             </div>
+          </div>
+        </div>
 
-            <div class="border rounded p-3 mb-3">
-              <p><strong>Patient:</strong> Jane Smith</p>
-              <p><strong>Date:</strong> 2025-04-08</p>
-              <p><strong>Status:</strong> <span class="text-warning fw-semibold">Pending</span></p>
-              <a href="#" class="btn btn-link p-0">View Details</a>
+        <!-- Consultation History -->
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h4 class="card-title mb-4">📖 Consultation History</h4>
+
+              @php
+                $completedAppointments = $appointments->where('status', 'completed');
+              @endphp
+
+              @forelse ($completedAppointments as $appointment)
+                <div class="border rounded p-3 mb-3">
+                  <p class="fw-semibold">{{ $appointment->patient->name ?? 'Unknown' }}</p>
+                  <p class="text-muted">Consulted on: {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y') }}</p>
+                  <a href="{{ route('doctor.patientProfile', $appointment->patient_id) }}" class="btn btn-link p-0 text-primary">View Patient Profile</a>
+                </div>
+              @empty
+                <div class="alert alert-info">No completed consultations yet.</div>
+              @endforelse
+
             </div>
-
-            <div class="border rounded p-3">
-              <p><strong>Patient:</strong> Michael Brown</p>
-              <p><strong>Date:</strong> 2025-04-09</p>
-              <p><strong>Status:</strong> <span class="text-success fw-semibold">Confirmed</span></p>
-              <a href="#" class="btn btn-link p-0">View Details</a>
-            </div>
-
           </div>
         </div>
       </div>
 
-      <!-- Consultation History -->
-      <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-          <div class="card-body">
-            <h4 class="card-title mb-4">📖 Consultation History</h4>
 
-            <div class="border rounded p-3 mb-3">
-              <p class="fw-semibold">John Doe</p>
-              <p class="text-muted">Consulted on: 2025-03-15</p>
-              <a href="#" class="btn btn-link p-0 text-primary">View Patient Profile</a>
-            </div>
 
-            <div class="border rounded p-3 mb-3">
-              <p class="fw-semibold">Jane Smith</p>
-              <p class="text-muted">Consulted on: 2025-02-20</p>
-              <a href="#" class="btn btn-link p-0 text-primary">View Patient Profile</a>
-            </div>
-
-            <div class="border rounded p-3">
-              <p class="fw-semibold">Michael Brown</p>
-              <p class="text-muted">Consulted on: 2025-01-30</p>
-              <a href="#" class="btn btn-link p-0 text-primary">View Patient Profile</a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Book Appointment Button -->
-    <div class="text-center mt-5">
-      <a href="#" class="btn btn-success btn-lg rounded-pill px-4">
-        ➕ Book New Appointment
-      </a>
-    </div>
 
   </div>
 

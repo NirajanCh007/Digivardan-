@@ -33,7 +33,6 @@ Route::post('/update-roles', [HomeController::class, 'updateRoles'])
 Route::group(['prefix'=>'patient'],function(){
     Route::middleware(['auth', 'checkroles:patient'])->group(function () {
         Route::get('dashboard', [PatientController::class, 'dashboard'])->name('patient.dashboard');
-        Route::get('doctors',[PatientController::class,'doctorspage'])->name('patient.doctors');
         Route::get('appointments',[PatientController::class,'appointmentspage'])->name('patient.checkappointments');
         Route::get('profile',[PatientController::class,'profile'])->name('patient.profile');
         Route::get('logout',[LoginController::class,'logout'])->name('patient.logout');
@@ -41,7 +40,7 @@ Route::group(['prefix'=>'patient'],function(){
         Route::get('notifications', [PatientController::class, 'notifications'])->name('patient.notifications');
         Route::put('notifications/{id}/mark-read', [PatientController::class, 'markNotification'])->name('patient.markNotification');
         Route::put('notifications/mark-all', [PatientController::class, 'markAllNotifications'])->name('patient.markAllNotifications');
-
+        Route::get('prescriptions/{id}',[PatientController::class,'showPrescription'])->name('patient.checkprescription');
     });
 });
 
@@ -60,7 +59,9 @@ Route::group(['prefix'=>'doctor'],function(){
         Route::get('notifications', [DoctorController::class, 'notifications'])->name('doctor.notifications');
         Route::put('notifications/{id}/mark-read', [DoctorController::class, 'markNotification'])->name('doctor.markNotification');
         Route::put('notifications/mark-all', [DoctorController::class, 'markAllNotifications'])->name('doctor.markAllNotifications');
-
+        Route::get('acceptAppointment/{id}',[DoctorController::class,'acceptAppointment'])->name('doctor.acceptappointment');
+        Route::post('prescribe/{id}',[DoctorController::class,'appointmentComplete'])->name('doctor.appointmentcomplete');
+        Route::get('/patientProfile/{id}',[DoctorController::class,'patientProfile'])->name('doctor.patientProfile');
     });
 });
 
