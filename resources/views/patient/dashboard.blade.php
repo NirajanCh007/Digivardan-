@@ -36,7 +36,7 @@
                                         <span class="text-primary fw-semibold">Confirmed</span>
                                     @endif
                                 </p>
-
+                                <p><a href="{{route('patient.messages',$appointment->doctor_id)}}">Message</a></p>
                             </div>
                         @endif
                     @empty

@@ -20,7 +20,7 @@ class PatientController extends Controller
     }
     public function appointmentspage(){
         $available = Doctor_availabilities::with('doctor')->where('is_booked','False')->orderBy('created_at','ASC')->get();
-        return view('patient.appointments',with(['slot'=>$available]));
+        return view('patient.appointments',with(['slots'=>$available]));
     }
     public function bookAppointment(Request $request)
     {

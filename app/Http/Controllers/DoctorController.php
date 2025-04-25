@@ -193,6 +193,12 @@ class DoctorController extends Controller
         }
         return redirect()->route('doctor.appointments')->with('error','could not mark appointment completion');
     }
+    public function cancelAppointment($id){
+        $apt = Appointments::where('patient_id',$id)->first();
+        $apt->status = "cancelled";
+        $apt->save();
+        return redirect()->route('doctor.appointments')->with('success','Appointment has been cancelled');
+    }
     public function notifications() {
         $notifications = auth()->user()->notifications;
         return view('doctor.notifications', compact('notifications'));

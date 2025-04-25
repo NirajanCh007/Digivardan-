@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Views;
 use Illuminate\Support\Facades\Auth;
@@ -41,8 +42,11 @@ Route::group(['prefix'=>'patient'],function(){
         Route::put('notifications/{id}/mark-read', [PatientController::class, 'markNotification'])->name('patient.markNotification');
         Route::put('notifications/mark-all', [PatientController::class, 'markAllNotifications'])->name('patient.markAllNotifications');
         Route::get('prescriptions/{id}',[PatientController::class,'showPrescription'])->name('patient.checkprescription');
+        Route::get('chat/{receiver}',[MessageController::class,'index'])->name('patient.messages');
+        Route::get('messages/{receiver}',[MessageController::class,'fetch'])->name('patient.mm');
+        Route::post('send/{receiver}',[MessageController::class,'send'])->name('patient.sendMessage');
     });
-});
+    });
 
 Route::group(['prefix'=>'doctor'],function(){
     Route::middleware(['auth', 'checkroles:doctor'])->group(function () {
@@ -60,8 +64,13 @@ Route::group(['prefix'=>'doctor'],function(){
         Route::put('notifications/{id}/mark-read', [DoctorController::class, 'markNotification'])->name('doctor.markNotification');
         Route::put('notifications/mark-all', [DoctorController::class, 'markAllNotifications'])->name('doctor.markAllNotifications');
         Route::get('acceptAppointment/{id}',[DoctorController::class,'acceptAppointment'])->name('doctor.acceptappointment');
+        Route::get('cancelaAPT',[DoctorController::class,'cancelAppointment'])->name('doctor.cancelAPT');
         Route::post('prescribe/{id}',[DoctorController::class,'appointmentComplete'])->name('doctor.appointmentcomplete');
         Route::get('/patientProfile/{id}',[DoctorController::class,'patientProfile'])->name('doctor.patientProfile');
+        Route::get('chat/{receiver}',[MessageController::class,'index'])->name('doctor.message');
+        Route::get('messages/{receiver}',[MessageController::class,'fetch'])->name('doctor.mm');
+        Route::post('send/{receiver}',[MessageController::class,'send'])->name('doctor.sendMessage');
+
     });
 });
 

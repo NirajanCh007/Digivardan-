@@ -47,4 +47,14 @@ class User extends Authenticatable
             'role' => 'string',
         ];
     }
+    public function isDoctor()
+    {
+        return $this->role === 'doctor';
+    }
+
+    public function isPatient()
+    {
+        return $this->role === 'patient';
+    }
+
 }

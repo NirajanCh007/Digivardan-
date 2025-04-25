@@ -40,11 +40,14 @@
                                     <strong>Note:</strong>
                                     {{$appointment->notes}}
                                 </p>
+                                <p class="mb-1">
+                                    <a href="{{route('doctor.message',$appointment->patient_id)}}">Message</a>
+                                </p>
                                 <div class="d-flex justify-content-end gap-2">
                                     <a href="{{route('doctor.acceptappointment',$appointment->id)}}" class="btn btn-sm btn-outline-info">
                                         <i class="bi bi-eye"></i> Accpet
                                     </a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">
+                                    <a href="{{route('doctor.cancelAPT',$appointment->patient_id)}}" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-x-circle"></i> Cancel
                                     </a>
                                 </div>
